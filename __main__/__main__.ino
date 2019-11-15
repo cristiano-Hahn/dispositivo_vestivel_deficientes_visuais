@@ -4,7 +4,6 @@
   int trig = 5;
   int saidaMotorVibracao = 6;
   Ultrasonic ultrassom(trig,echo);
-  float timewait = 0;
   
   void setup() {
     Serial.begin(9600);
@@ -13,30 +12,21 @@
  
  void loop()
  {
-   long distancia = 0;
+   long distancia = ultrassom.read(CM);
 
-   while (distancia == 0){
-     distancia = ultrassom.Ranging(CM);
-   }
-     
-   timewait = distancia * 4;
-
-   if(distancia > 0 && distancia < 25){
+   if(distancia > 0 && distancia < 50){
       analogWrite(saidaMotorVibracao, 200);
-      delay(50);
-   }else if(distancia < 150){
+   }else if(distancia >= 50 && distancia < 120){
       analogWrite(saidaMotorVibracao, 200);
       delay(200);
       analogWrite(saidaMotorVibracao, 0);
-      delay(timewait);
+      delay(distancia);
    }else{
       analogWrite(saidaMotorVibracao, 0);
-      delay(50);
    }
    
    Serial.print("Distância: ");
    Serial.print(distancia);
-   Serial.print("cm ");
-
+   Serial.println("cm ");
  }
  
